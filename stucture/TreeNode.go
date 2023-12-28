@@ -16,15 +16,15 @@ type TreeNode struct {
 }
 
 // Функция для представления дерева в матрице
-func (tn *TreeNode) ToMatrix() [][]int {
-	maxLevel := maxDepth(tn, 0)
-	matrix := make([][]int, maxLevel)
-	for level := 0; level < maxLevel; level++ {
-		matrix[level] = make([]int, 1<<level)
-	}
-	recursiveLoadToMatrix(&matrix, tn, 0, 0)
-	return matrix
-}
+//func (tn *TreeNode) ToMatrix() [][]int {
+//	maxLevel := maxDepth(tn, 0)
+//	matrix := make([][]int, maxLevel)
+//	for level := 0; level < maxLevel; level++ {
+//		matrix[level] = make([]int, 1<<level)
+//	}
+//	recursiveLoadToMatrix(&matrix, tn, 0, 0)
+//	return matrix
+//}
 
 // Рекурсивная функция прохода по дереву и записи значений в матрицу
 func recursiveLoadToMatrix(matrix *[][]int, root *TreeNode, level int, i int) {
@@ -49,7 +49,7 @@ func (tn *TreeNode) String() string {
 	maxElements := 1 << (maxLevel - 1)
 	sb := strings.Builder{}
 	sb.WriteString("Max depth: " + strconv.Itoa(maxLevel) + "\n")
-	matrix := tn.ToMatrix()
+	matrix := ToMatrix(tn)
 	//fmt.Println(matrix)
 	for level := 0; level < maxLevel; level++ {
 		cntElenentsOfLevel := 1 << level
@@ -69,6 +69,16 @@ func (tn *TreeNode) String() string {
 		sb.WriteString("\n")
 	}
 	return sb.String()
+}
+
+func ToMatrix(tn *TreeNode) [][]int {
+	maxLevel := maxDepth(tn, 0)
+	matrix := make([][]int, maxLevel)
+	for level := 0; level < maxLevel; level++ {
+		matrix[level] = make([]int, 1<<level)
+	}
+	recursiveLoadToMatrix(&matrix, tn, 0, 0)
+	return matrix
 }
 
 func MaxValue(root *TreeNode) int {
