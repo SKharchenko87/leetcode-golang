@@ -1,4 +1,4 @@
-package main
+package p0394
 
 import (
 	"fmt"
@@ -20,22 +20,8 @@ type stack[T any] struct {
 }
 
 func (s *stack[T]) push(e T) {
-	if s.count != 0 {
-		if len(s.arr) <= s.count {
-			s.arr = append(s.arr, e)
-		} else {
-			s.arr[s.count-1] = e
-		}
-		s.count++
-	} else {
-		if len(s.arr) > 0 {
-			s.arr[0] = e
-		} else {
-			s.arr = append(s.arr, e)
-		}
-		s.count = 1
-
-	}
+	s.arr = append(s.arr, e)
+	s.count = len(s.arr)
 }
 
 func (s *stack[T]) peek() T {
@@ -47,8 +33,13 @@ func (s *stack[T]) getCount() int {
 }
 
 func (s *stack[T]) pop() T {
+	var nil T // Type must be a pointer, channel, func, interface, map, or slice type
+	if s.count == 0 {
+		return nil
+	}
 	x := s.arr[s.count-1]
-	s.count--
+	s.arr = s.arr[:s.count-1]
+	s.count = len(s.arr)
 	return x
 }
 
@@ -62,52 +53,44 @@ func arrToInt(arr []int32) int {
 
 func decodeString(s string) string {
 	stackString := stack[string]{}
-	stackBracket := stack[int32]{}
 	stackInt := stack[int]{}
 
 	bufStr := []int32{}
 	bufInt := []int32{}
-
 	for _, v := range s {
 		if v >= 'a' && v <= 'z' {
 			bufStr = append(bufStr, v)
 		}
 		if v >= '0' && v <= '9' {
-			if len(bufStr) > 0 {
-				stackString.push(string(bufStr))
-				bufStr = []int32{}
-			}
 			bufInt = append(bufInt, v)
 		}
 		if v == '[' {
-			stackBracket.push(v)
 			stackInt.push(arrToInt(bufInt))
 			bufInt = []int32{}
-		}
-		if v == ']' {
-			var str string
-			n := stackInt.pop()
-			if len(bufStr) > 0 {
-				str = strings.Repeat(string(bufStr), n)
-			} else {
-				str = strings.Repeat(stackString.pop(), n)
-			}
-			stackBracket.pop()
-			if stackBracket.getCount() > 0 {
-				str = stackString.pop() + str
-			}
-			stackString.push(str)
+			stackString.push(string(bufStr))
 			bufStr = []int32{}
 		}
+		if v == ']' {
+			x := stackInt.pop()
+			var tmp, repeatStr string
+			if len(bufStr) == 0 {
+				tmp = stackString.pop()
+			} else {
+				tmp = string(bufStr)
+			}
+			repeatStr = stackString.pop() + strings.Repeat(tmp, x)
+			bufStr = []int32(repeatStr)
+		}
 	}
-	sss := ""
+
+	res := ""
 	for stackString.getCount() != 0 {
-		sss = stackString.pop() + sss
+		res = stackString.pop() + res
 	}
 	if len(bufStr) > 0 {
-		sss = sss + string(bufStr)
+		res = res + string(bufStr)
 	}
-	return sss
+	return res
 }
 
 func repeatArr[T any](arr []T, n int) []T {
