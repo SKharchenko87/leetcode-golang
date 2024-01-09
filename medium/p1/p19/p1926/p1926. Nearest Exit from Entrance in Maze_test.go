@@ -15,6 +15,7 @@ func Test_nearestExit(t *testing.T) {
 		{"Case 1", args{[][]byte{{'+', '+', '.', '+'}, {'.', '.', '.', '+'}, {'+', '+', '+', '.'}}, []int{1, 2}}, 1},
 		{"Case 2", args{[][]byte{{'+', '+', '+'}, {'.', '.', '.'}, {'+', '+', '+'}}, []int{1, 0}}, 2},
 		{"Case 3", args{[][]byte{{'.', '+'}}, []int{0, 0}}, -1},
+		{"Case 3", args{[][]byte{{'.', '.'}, {'.', '.'}}, []int{0, 0}}, 1},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
