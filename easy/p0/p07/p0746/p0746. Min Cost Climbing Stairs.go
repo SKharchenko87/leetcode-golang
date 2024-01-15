@@ -1,30 +1,30 @@
 package p0746
 
+import (
+	"math"
+)
+
 func minCostClimbingStairs(cost []int) int {
-	switch len(cost) {
-	case 0:
-		return 0
-	case 1:
-		return cost[0]
-	case 2:
-		return min(cost[0], cost[1])
-	default:
-		sum := 0
-		l := len(cost)
-		for i := 0; i < l; {
-			if i == len(cost)-1 {
-				cost = append(cost, 0, 0)
-			} else if i == len(cost)-2 {
-				cost = append(cost, 0)
-			}
-			if cost[i]+cost[i+2] <= cost[i+1] {
-				sum += cost[i] + cost[i+2]
-				i += 3
-			} else {
-				sum += cost[i+1]
-				i += 2
+	l := len(cost)
+	minPath := make([]int, l)
+	k := 2
+	for i := 0; i < k && i < l; i++ {
+		minPath[i] = cost[i]
+	}
+	for i := k; i < l; i++ {
+		prevMin := math.MaxInt
+		for j := 1; j <= k && i-j >= 0; j++ {
+			if prevMin > minPath[i-j] {
+				prevMin = minPath[i-j]
 			}
 		}
-		return sum
+		minPath[i] = cost[i] + prevMin
 	}
+	res := math.MaxInt
+	for i := 1; i <= k; i++ {
+		if res > minPath[l-i] {
+			res = minPath[l-i]
+		}
+	}
+	return res
 }
