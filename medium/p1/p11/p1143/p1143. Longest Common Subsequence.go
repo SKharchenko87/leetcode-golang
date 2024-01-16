@@ -1,33 +1,20 @@
 package p1143
 
-import "strings"
-
-func toMapChar(text string) map[int32]bool {
-	res := make(map[int32]bool, 26)
-	for _, c := range text {
-		res[c] = true
-	}
-	return res
-}
-
+// ToDo разобраться
 func longestCommonSubsequence(text1 string, text2 string) int {
-	//l1 := len(text1)
-	//l2 := len(text2)
-	m1 := toMapChar(text1)
-	m2 := toMapChar(text2)
-
-	sb1 := strings.Builder{}
-	for _, c := range text1 {
-		if m2[c] {
-			sb1.WriteByte(byte(c))
+	l1, l2 := len(text1)+1, len(text2)+1
+	dp := make([][]int, l1)
+	for i := 0; i < l1; i++ {
+		dp[i] = make([]int, l2)
+	}
+	for i := 1; i < l1; i++ {
+		for j := 1; j < l2; j++ {
+			if text1[i-1] == text2[j-1] {
+				dp[i][j] = dp[i-1][j-1] + 1
+			} else {
+				dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+			}
 		}
 	}
-	sb2 := strings.Builder{}
-	for _, c := range text2 {
-		if m1[c] {
-			sb2.WriteByte(byte(c))
-		}
-	}
-	
-	return 0
+	return dp[l1-1][l2-1]
 }
