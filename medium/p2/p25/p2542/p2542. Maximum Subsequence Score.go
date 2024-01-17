@@ -1,33 +1,43 @@
 package p2542
 
 import (
-	"fmt"
-	"math"
+	"container/heap"
 	"sort"
 )
 
+// ToDo разобраться
 func maxScore(nums1 []int, nums2 []int, k int) int64 {
-	sort.Slice(nums1, func(i, j int) bool {
-		return nums2[i] > nums2[j]
-	})
-	sort.Ints(nums2)
-	reverseSlice(nums2)
-	fmt.Println(nums1, nums2)
-	l := len(nums1)
-	minM := math.MaxInt
-	sum := 0
-	for i := k; i > 0; i-- {
-		if minM > nums2[l-i] {
-			minM = nums2[l-i]
-		}
-		sum += nums1[l-i]
+	magic := make([][2]int, len(nums1))
+	for i := range magic {
+		magic[i] = [2]int{nums1[i], nums2[i]}
 	}
-	return int64(minM) * int64(sum)
+	sort.Slice(magic, func(i, j int) bool {
+		return magic[i][1] > magic[j][1]
+	})
+	minHeap := &Heap{}
+	summation := 0
+	for i := 0; i < k; i++ {
+		heap.Push(minHeap, magic[i][0])
+		summation += magic[i][0]
+	}
+	factor := magic[k-1][1]
+	ms := summation * factor
+	for i := k; i < len(magic); i++ {
+		summation += magic[i][0]
+		heap.Push(minHeap, magic[i][0])
+		summation -= heap.Pop(minHeap).(int)
+		cms := magic[i][1] * summation
+		if cms > ms {
+			ms = cms
+		}
+	}
+	return int64(ms)
 }
 
-func reverseSlice(s []int) {
-	length := len(s)
-	for i := 0; i < length/2; i++ {
-		s[i], s[length-i-1] = s[length-i-1], s[i]
-	}
-}
+type Heap []int
+
+func (p Heap) Len() int            { return len(p) }
+func (p Heap) Less(i, j int) bool  { return p[i] < p[j] }
+func (p *Heap) Swap(i, j int)      { (*p)[i], (*p)[j] = (*p)[j], (*p)[i] }
+func (p *Heap) Push(i interface{}) { *p = append(*p, i.(int)) }
+func (p *Heap) Pop() interface{}   { v := (*p)[len(*p)-1]; *p = (*p)[:len(*p)-1]; return v }
