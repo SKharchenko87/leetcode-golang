@@ -1,21 +1,13 @@
-package main
-
-import "fmt"
+package p0070
 
 func climbStairs(n int) int {
-	if n == 1 {
-		return 1
+	switch n {
+	case 0, 1, 2, 3:
+		return n
 	}
-	if n == 2 {
-		return 2
+	cur, prev := 3, 2
+	for i := 3; i < n; i++ {
+		cur, prev = cur+prev, cur
 	}
-	m := map[int]int{1: 1, 2: 2}
-	for i := 3; i <= n; i++ {
-		m[i] = m[i-1] + m[i-2]
-	}
-	return m[n]
-}
-
-func main() {
-	fmt.Println(climbStairs(5))
+	return cur
 }
