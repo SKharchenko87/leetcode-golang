@@ -1,5 +1,6 @@
 package p0070
 
+//ToDo benchmark без switch, просто все значения до  n<=45
 func climbStairs(n int) int {
 	switch n {
 	case 0, 1, 2, 3:
