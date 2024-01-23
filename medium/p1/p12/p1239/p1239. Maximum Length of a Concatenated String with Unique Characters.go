@@ -36,10 +36,10 @@ func strToBit(str string) uint32 {
 	m := make(map[int]int)
 	for _, c := range str {
 		k := 1 << (c - 'a')
-		m[k]++
-		if m[k] == 2 {
+		if m[k] == 1 {
 			return 0
 		}
+		m[k]++
 		res += uint32(k)
 	}
 	return res
