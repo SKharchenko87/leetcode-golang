@@ -14,6 +14,7 @@ count от 2 будет расти пока не встретиться 3,
 2 3 2 3 2 3 3
 count от 2 будет колебаться от 0 до 1 и в конце будет count(3)=1
 */
+/*ToDo banchmark*/
 func majorityElement(nums []int) (major int) {
 	count := 0
 	for _, v := range nums {
