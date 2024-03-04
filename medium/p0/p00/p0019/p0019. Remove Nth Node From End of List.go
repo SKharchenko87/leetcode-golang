@@ -29,4 +29,4 @@ func removeNthFromEnd(head *ListNode, n int) *ListNode {
 		cur = cur.Next
 	}
 	return head
-}
+}chr	
