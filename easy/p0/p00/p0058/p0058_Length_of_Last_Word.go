@@ -1,4 +1,4 @@
-package main
+package p0058
 
 import "fmt"
 
