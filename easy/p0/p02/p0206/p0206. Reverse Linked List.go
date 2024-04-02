@@ -1,28 +1,4 @@
-package main
-
-import "fmt"
-
-func main() {
-	headArr := []int{1, 2, 3, 4, 5}
-	head := new(ListNode)
-	save := head
-	for i, v := range headArr {
-		head.Val = v
-		fmt.Printf("v: %p %v\n", &head, head)
-		if i != len(headArr)-1 {
-			next := new(ListNode)
-			head.Next = next
-			head = next
-		}
-	}
-	var x *ListNode
-	x = save
-	x = reverseList(x)
-	for x != nil {
-		fmt.Println(x)
-		x = x.Next
-	}
-}
+package p0206
 
 type ListNode struct {
 	Val  int
@@ -34,6 +10,33 @@ func reverseList(head *ListNode) *ListNode {
 	for head != nil {
 		res = &ListNode{head.Val, res}
 		head = head.Next
+	}
+	return res
+}
+
+func run(headArr []int) []int {
+	l := len(headArr)
+	if l == 0 {
+		return []int{}
+	}
+	head := new(ListNode)
+	save := head
+	for i := 0; i < l-1; i++ {
+		head.Val = headArr[i]
+		next := new(ListNode)
+		head.Next = next
+		head = next
+	}
+
+	head.Val = headArr[l-1]
+	head = save
+	reverseHead := reverseList(head)
+	res := make([]int, len(headArr))
+	i := 0
+	for reverseHead != nil {
+		res[i] = reverseHead.Val
+		reverseHead = reverseHead.Next
+		i++
 	}
 	return res
 }
