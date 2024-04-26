@@ -1,6 +1,6 @@
 package p1137
 
-//ToDo banchmark
+// ToDo banchmark
 func tribonacciDP(n int, m *map[int]int) int {
 	if v, ok := (*m)[n]; ok {
 		return v
