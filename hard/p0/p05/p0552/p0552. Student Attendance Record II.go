@@ -12,19 +12,37 @@ type ccc struct {
 }
 
 func checkRecord(n int) int {
+	if n == 1 {
+		return 3
+	}
+	prevDP := ccc{g: 0, r: 0, y: 0, ry: 0, ryy: 0, yy: 0}
+	curDP := ccc{g: 1, r: 1, y: 1, ry: 0, ryy: 0, yy: 0}
+	for i := 2; i <= n; i++ {
+		prevDP = curDP
+		g := (prevDP.g + prevDP.y + prevDP.yy) % MOD
+		r := (prevDP.g + prevDP.y + prevDP.r + prevDP.yy + prevDP.ry + prevDP.ryy) % MOD
+		y := (prevDP.g) % MOD
+		ry := (prevDP.r) % MOD
+		ryy := (prevDP.ry) % MOD
+		yy := (prevDP.y) % MOD
+		curDP = ccc{g, r, y, ry, ryy, yy}
+	}
+	return (curDP.g + curDP.r + curDP.y + curDP.ry + curDP.ryy + curDP.yy) % MOD
+}
+
+func checkRecord3(n int) int {
 	dp := make([]ccc, n+1)
 	dp[1] = ccc{g: 1, r: 1, y: 1, ry: 0, ryy: 0, yy: 0}
-
 	for i := 2; i <= n; i++ {
-		dp[i].g = dp[i-1].g + dp[i-1].y + dp[i-1].yy
-		dp[i].r = dp[i-1].g*2 + dp[i-1].y + dp[i-1].yy
-		dp[i].y = dp[i-1].g
-		dp[i].ry = dp[i-1].r
-		dp[i].ryy = dp[i-1].ry
-		dp[i].yy = dp[i-1].y
-		println(dp[n].g, dp[n].r, dp[n].y, dp[n].ry, dp[n].ryy, dp[n].yy)
+		dp[i].g = (dp[i-1].g + dp[i-1].y + dp[i-1].yy) % MOD
+		dp[i].r = (dp[i-1].g + dp[i-1].y + dp[i-1].r + dp[i-1].yy + dp[i-1].ry + dp[i-1].ryy) % MOD
+		dp[i].y = (dp[i-1].g) % MOD
+		dp[i].ry = (dp[i-1].r) % MOD
+		dp[i].ryy = (dp[i-1].ry) % MOD
+		dp[i].yy = (dp[i-1].y) % MOD
+		//println(dp[i].g, dp[i].r, dp[i].y, dp[i].ry, dp[i].ryy, dp[i].yy)
 	}
-	return dp[n].g + dp[n].r + dp[n].y + dp[n].ry + dp[n].ryy + dp[n].yy
+	return (dp[n].g + dp[n].r + dp[n].y + dp[n].ry + dp[n].ryy + dp[n].yy) % MOD
 }
 
 func checkRecord2(n int) int {
