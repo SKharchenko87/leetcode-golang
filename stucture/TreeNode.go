@@ -192,7 +192,7 @@ func TreeNodeToSlice(root *TreeNode) []int {
 		}
 	}
 	cntLastNull := 0
-	for i := len(result) - 1; result[i] == NULL && i >= 0; i-- {
+	for i := len(result) - 1; i >= 0 && result[i] == NULL; i-- {
 		cntLastNull++
 	}
 	return result[:len(result)-cntLastNull]
