@@ -169,3 +169,31 @@ func parentIsNil(slice []int, null int) bool {
 
 	return slice[l-(l+2)/2] == null
 }
+
+func TreeNodeToSlice(root *TreeNode) []int {
+
+	start := 0
+	arr := []*TreeNode{root}
+
+	for start < len(arr) {
+		if v := arr[start]; v != nil {
+			arr = append(arr, v.Left)
+			arr = append(arr, v.Right)
+		}
+		start++
+	}
+
+	result := make([]int, len(arr))
+	for i, node := range arr {
+		if node == nil {
+			result[i] = NULL
+		} else {
+			result[i] = node.Val
+		}
+	}
+	cntLastNull := 0
+	for i := len(result) - 1; result[i] == NULL && i >= 0; i-- {
+		cntLastNull++
+	}
+	return result[:len(result)-cntLastNull]
+}
