@@ -50,3 +50,28 @@ func (ln *ListNode) arrayToListNode(arr *[]int, i int) *ListNode {
 	i++
 	return ln.arrayToListNode(arr, i)
 }
+
+func ArrToList(arr []int) *ListNode {
+	if len(arr) == 0 {
+		return nil
+	}
+	res := &ListNode{}
+	cur := res
+	for i, a := range arr {
+		cur.Val = a
+		if i != len(arr)-1 {
+			cur.Next = &ListNode{}
+			cur = cur.Next
+		}
+	}
+	return res
+}
+
+func ListToArr(head *ListNode) []int {
+	res := []int{}
+	for head != nil {
+		res = append(res, head.Val)
+		head = head.Next
+	}
+	return res
+}
