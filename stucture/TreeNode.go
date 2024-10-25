@@ -8,6 +8,7 @@ import (
 )
 
 const NULL = math.MinInt
+const null = math.MinInt
 
 type TreeNode struct {
 	Val   int
