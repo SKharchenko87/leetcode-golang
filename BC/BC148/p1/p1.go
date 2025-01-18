@@ -1,4 +1,4 @@
-package p4
+package p1
 
 type Ints interface {
 	int | int8 | int16 | int32 | int64
