@@ -1,7 +1,404 @@
 package p3
 
-// TLE
+import "fmt"
+
+type Stack []interface{}
+
+func (s *Stack) Push(v interface{}) {
+	*s = append(*s, v)
+}
+func (s *Stack) Pop() interface{} {
+	l := len(*s)
+	v := (*s)[l-1]
+	*s = (*s)[:l-1]
+	return v
+}
+
+func (s *Stack) Top() interface{} {
+	l := len(*s)
+	v := (*s)[l-1]
+	return v
+}
+
+func (s *Stack) Empty() bool {
+	return len(*s) == 0
+}
+
 func longestSpecialPath(edges [][]int, nums []int) []int {
+	n := len(nums)
+	tree := make(map[int][][2]int)
+	for _, edge := range edges {
+		u, v, length := edge[0], edge[1], edge[2]
+		tree[u] = append(tree[u], [2]int{v, length})
+		tree[v] = append(tree[v], [2]int{u, length})
+	}
+	colors := make([]*Stack, 50001)
+	sum := make([]int, n)
+	var maxLength, minNodes int
+	maxLength = -1
+	var dfs func(cur, parent, index, indexBreak, length int)
+	dfs = func(cur, parent, index, indexBreak, length int) {
+		sum[index] = length
+		newIndexBreak := indexBreak
+		if colors[nums[cur]] == nil {
+			colors[nums[cur]] = new(Stack)
+		}
+		color := colors[nums[cur]]
+		if !color.Empty() {
+			v := color.Top().(int)
+			if v > indexBreak {
+				newIndexBreak = v
+				curLength, curNodes := sum[index-1]-sum[indexBreak+1], index-indexBreak-1
+				if maxLength < curLength {
+					maxLength = curLength
+					minNodes = curNodes
+				} else if maxLength == curLength && minNodes > curNodes {
+					minNodes = curNodes
+				}
+			}
+		}
+		color.Push(index)
+
+		if len(tree[cur]) > 1 || cur == 0 {
+			for _, child := range tree[cur] {
+				if child[0] != parent {
+					dfs(child[0], cur, index+1, newIndexBreak, length+child[1])
+				}
+			}
+		} else {
+			curLength, curNodes := length-sum[newIndexBreak+1], index-newIndexBreak
+			if maxLength < curLength {
+				maxLength = curLength
+				minNodes = curNodes
+			} else if maxLength == curLength && minNodes > curNodes {
+				minNodes = curNodes
+			}
+		}
+
+		color.Pop()
+
+	}
+	dfs(0, -1, 0, -1, 0)
+	return []int{maxLength, minNodes}
+}
+
+func longestSpecialPath4(edges [][]int, nums []int) []int {
+	n := len(nums)
+	tree := make(map[int][][2]int)
+	for _, edge := range edges {
+		u, v, length := edge[0], edge[1], edge[2]
+		tree[u] = append(tree[u], [2]int{v, length})
+		tree[v] = append(tree[v], [2]int{u, length})
+	}
+	colors := map[int]*Stack{}
+	sum := make([]int, n)
+	var maxLength, minNodes int
+	maxLength = -1
+	var dfs func(cur, parent, index, indexBreak, length int)
+	dfs = func(cur, parent, index, indexBreak, length int) {
+		sum[index] = length
+		newIndexBreak := indexBreak
+		if colors[nums[cur]] == nil {
+			colors[nums[cur]] = new(Stack)
+		}
+		color := colors[nums[cur]]
+		if !color.Empty() {
+			v := color.Top().(int)
+			if v > indexBreak {
+				newIndexBreak = v
+				curLength, curNodes := sum[index-1]-sum[indexBreak+1], index-indexBreak-1
+				if maxLength < curLength {
+					maxLength = curLength
+					minNodes = curNodes
+				} else if maxLength == curLength && minNodes > curNodes {
+					minNodes = curNodes
+				}
+			}
+		}
+		color.Push(index)
+
+		if len(tree[cur]) > 1 || cur == 0 {
+			for _, child := range tree[cur] {
+				if child[0] != parent {
+					dfs(child[0], cur, index+1, newIndexBreak, length+child[1])
+				}
+			}
+		} else {
+			curLength, curNodes := length-sum[newIndexBreak+1], index-newIndexBreak
+			if maxLength < curLength {
+				maxLength = curLength
+				minNodes = curNodes
+			} else if maxLength == curLength && minNodes > curNodes {
+				minNodes = curNodes
+			}
+		}
+
+		color.Pop()
+
+	}
+	dfs(0, -1, 0, -1, 0)
+	return []int{maxLength, minNodes}
+}
+
+// TLE
+func longestSpecialPath3(edges [][]int, nums []int) []int {
+	n := len(nums)
+	path := make([][2]int, n)
+	indexPath := 0
+	calculatedPath := make([]bool, n)
+	//indexCalculatedPath := 0
+	tree := make(map[int][][2]int)
+	for _, edge := range edges {
+		u, v, length := edge[0], edge[1], edge[2]
+		tree[u] = append(tree[u], [2]int{v, length})
+		tree[v] = append(tree[v], [2]int{u, length})
+	}
+
+	var maxLength, minNodes int
+	minNodes = 10001
+	var dfs func(node, parent, length int)
+	dfs = func(node, parent, length int) {
+		path[indexPath][0] = node
+		path[indexPath][1] = length
+		if len(tree[node]) == 1 && node != 0 {
+			//fmt.Println(path[:indexPath+1])
+			computing(path, nums, indexPath, &maxLength, &minNodes, &calculatedPath)
+			indexPath++
+		} else {
+			indexPath++
+			for _, v := range tree[node] {
+				if v[0] != parent {
+					dfs(v[0], node, v[1])
+				}
+			}
+		}
+		indexPath--
+	}
+	dfs(0, -1, 0)
+
+	return []int{maxLength, minNodes}
+}
+
+func computing(path [][2]int, nums []int, lastIndexPath int, maxLength, minNodes *int, calculatedPath *[]bool) {
+	colors := make(map[int]bool, lastIndexPath)
+	colors[nums[path[lastIndexPath][0]]] = true
+	j := lastIndexPath
+	i := lastIndexPath - 1
+	sum := path[lastIndexPath][1]
+	for ; i >= 0; i-- {
+		colorI := nums[path[i][0]]
+		if colors[colorI] {
+
+			if *maxLength < sum-path[i+1][1] {
+				*maxLength = sum - path[i+1][1]
+				*minNodes = j - i
+			} else if *maxLength == sum-path[i+1][1] && *minNodes > j-i {
+				*minNodes = j - i
+			}
+
+			colorJ := nums[path[j][0]]
+			for colorJ != colorI {
+				colors[colorJ] = false
+				sum -= path[j][1] // tree[path[j]][path[j-1]]
+				j--
+				if (*calculatedPath)[path[j][0]] {
+					return
+				}
+				(*calculatedPath)[path[j][0]] = true
+				colorJ = nums[path[j][0]]
+			}
+
+			sum -= path[j][1] // tree[path[j]][path[j-1]]
+			j--
+			if (*calculatedPath)[path[j][0]] {
+				return
+			}
+			(*calculatedPath)[path[j][0]] = true
+			sum += path[i][1] // tree[path[i]][path[i+1]]
+			colors[colorI] = true
+
+		} else {
+			colors[colorI] = true
+			sum += path[i][1] // tree[path[i]][path[i+1]]
+		}
+	}
+
+	if *maxLength < sum {
+		*maxLength = sum
+		*minNodes = j - i
+	} else if *maxLength == sum && *minNodes > j-i {
+		*minNodes = j - i
+	}
+}
+
+// TLE
+func longestSpecialPath2(edges [][]int, nums []int) []int {
+	n := len(nums)
+	path := make([]int, n)
+	indexPath := 0
+	calculatedPath := make([]bool, n)
+	//indexCalculatedPath := 0
+	tree := make(map[int]map[int]int)
+	for _, edge := range edges {
+		u, v, length := edge[0], edge[1], edge[2]
+		if _, ok := tree[u]; !ok {
+			tree[u] = make(map[int]int)
+		}
+		if _, ok := tree[v]; !ok {
+			tree[v] = make(map[int]int)
+		}
+		tree[u][v] = length
+		tree[v][u] = length
+	}
+	var maxLength, minNodes int
+	minNodes = 10001
+	var dfs func(node, parent int)
+	dfs = func(node, parent int) {
+		path[indexPath] = node
+		if len(tree[node]) == 1 && node != 0 {
+			//fmt.Println(path[:indexPath+1])
+			calculate(path, nums, indexPath, tree, &maxLength, &minNodes, &calculatedPath)
+			indexPath++
+		} else {
+			indexPath++
+			for v, _ := range tree[node] {
+				if v != parent {
+					dfs(v, node)
+				}
+			}
+		}
+		indexPath--
+	}
+	dfs(0, -1)
+
+	return []int{maxLength, minNodes}
+}
+
+func calculate(path, nums []int, lastIndexPath int, tree map[int]map[int]int, maxLength, minNodes *int, calculatedPath *[]bool) {
+	colors := make(map[int]bool, lastIndexPath)
+	colors[nums[path[lastIndexPath]]] = true
+	j := lastIndexPath
+	i := lastIndexPath - 1
+	sum := 0
+	for ; i >= 0; i-- {
+		colorI := nums[path[i]]
+		if colors[colorI] {
+
+			if *maxLength < sum {
+				*maxLength = sum
+				*minNodes = j - i
+			} else if *maxLength == sum && *minNodes > j-i {
+				*minNodes = j - i
+			}
+
+			colorJ := nums[path[j]]
+			for colorJ != colorI {
+				colors[colorJ] = false
+				sum -= tree[path[j]][path[j-1]]
+				j--
+				if (*calculatedPath)[path[j]] {
+					return
+				}
+				(*calculatedPath)[path[j]] = true
+				colorJ = nums[path[j]]
+			}
+
+			sum -= tree[path[j]][path[j-1]]
+			j--
+			if (*calculatedPath)[path[j]] {
+				return
+			}
+			(*calculatedPath)[path[j]] = true
+			sum += tree[path[i]][path[i+1]]
+			colors[colorI] = true
+
+		} else {
+			colors[colorI] = true
+			sum += tree[path[i]][path[i+1]]
+		}
+	}
+
+	if *maxLength < sum {
+		*maxLength = sum
+		*minNodes = j - i
+	} else if *maxLength == sum && *minNodes > j-i {
+		*minNodes = j - i
+	}
+
+}
+
+func calculate1(path, nums []int, lastIndexPath int, tree map[int]map[int]int, maxLength, minNodes *int) (res [][3]int) {
+	colors := make(map[int]bool, lastIndexPath)
+	colors[nums[path[lastIndexPath]]] = true
+	j := lastIndexPath
+	i := lastIndexPath - 1
+	sum := 0
+	for ; i >= 0; i-- {
+		colorI := nums[path[i]]
+		if colors[colorI] {
+			res = append(res, [3]int{i + 1, j, sum})
+			if *maxLength < sum {
+				*maxLength = sum
+				*minNodes = j - i
+			} else if *maxLength == sum && *minNodes > j-i {
+				*minNodes = j - i
+			}
+
+			colorJ := nums[path[j]]
+			for colorJ != colorI && j > 0 {
+				colors[colorJ] = false
+				sum -= tree[path[j]][path[j-1]]
+				j--
+			}
+			if j > 0 {
+				sum -= tree[path[j]][path[j-1]]
+				j--
+				sum += tree[path[i]][path[i+1]]
+				colors[colorI] = true
+			}
+		} else {
+			colors[colorI] = true
+			sum += tree[path[i]][path[i+1]]
+		}
+	}
+	res = append(res, [3]int{i + 1, j, sum})
+	if *maxLength < sum {
+		*maxLength = sum
+		*minNodes = j - i
+	} else if *maxLength == sum && *minNodes > j-i {
+		*minNodes = j - i
+	}
+	fmt.Println(res)
+	return res
+}
+
+func calculate0(path, nums []int, lastIndexPath int) (res [][2]int) {
+	colors := make(map[int]bool, lastIndexPath)
+	colors[nums[path[lastIndexPath]]] = true
+	j := lastIndexPath
+	i := lastIndexPath - 1
+	for ; i >= 0; i-- {
+		colorI := nums[path[i]]
+		if colors[colorI] {
+			res = append(res, [2]int{i + 1, j})
+			colorJ := nums[path[j]]
+			for colorJ != colorI {
+				colors[colorJ] = false
+				j--
+				colorJ = nums[path[j]]
+			}
+			j--
+		} else {
+			colors[colorI] = true
+		}
+	}
+	res = append(res, [2]int{i + 1, j})
+	fmt.Println(res)
+	return res
+}
+
+// TLE
+func longestSpecialPath1(edges [][]int, nums []int) []int {
 	tree := make(map[int][][2]int)
 	for _, edge := range edges {
 		u, v, length := edge[0], edge[1], edge[2]
@@ -103,8 +500,8 @@ func longestSpecialPath0(edges [][]int, nums []int) []int {
 		delete(uniq, node.color)
 	}
 
-	//for _, node := range nodes[0].childrenNode {
-	//	dfs(node, &Node{}, 0, 0, make(map[int]bool))
+	//for _, nodes := range nodes[0].childrenNode {
+	//	dfs(nodes, &Node{}, 0, 0, make(map[int]bool))
 	//}
 	dfs(nodes[0], &Node{}, 0, 0, make(map[int]bool))
 	return res
