@@ -200,27 +200,32 @@ func TreeNodeToSlice(root *TreeNode) []int {
 }
 
 func TreeToSlice(root *TreeNode) []any {
+	start := 0
 	arr := []*TreeNode{root}
-	res := []any{root.Val}
-	for i := 0; i < len(arr); i++ {
-		if arr[i] == nil {
-			continue
+
+	for start < len(arr) {
+		if v := arr[start]; v != nil {
+			arr = append(arr, v.Left)
+			arr = append(arr, v.Right)
 		}
-		if arr[i].Left != nil {
-			arr = append(arr, arr[i].Left)
-			res = append(res, arr[i].Left.Val)
+		start++
+	}
+
+	result := make([]any, len(arr))
+	for i, node := range arr {
+		if node == nil {
+			result[i] = nil
 		} else {
-			res = append(res, nil)
-		}
-		if arr[i].Right != nil {
-			arr = append(arr, arr[i].Right)
-			res = append(res, arr[i].Right.Val)
-		} else {
-			res = append(res, nil)
+			result[i] = node.Val
 		}
 	}
-	i := len(res) - 1
-	for ; i >= 0 && res[i] == nil; i-- {
+	cntLastNull := 0
+	for i := len(result) - 1; i >= 0 && result[i] == nil; i-- {
+		cntLastNull++
 	}
-	return res[:i+1]
+	return result[:len(result)-cntLastNull]
+}
+
+func SliceToTree(root *TreeNode) []any {
+	//ToDo
 }
