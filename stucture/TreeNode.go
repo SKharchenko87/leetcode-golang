@@ -198,3 +198,29 @@ func TreeNodeToSlice(root *TreeNode) []int {
 	}
 	return result[:len(result)-cntLastNull]
 }
+
+func TreeToSlice(root *TreeNode) []any {
+	arr := []*TreeNode{root}
+	res := []any{root.Val}
+	for i := 0; i < len(arr); i++ {
+		if arr[i] == nil {
+			continue
+		}
+		if arr[i].Left != nil {
+			arr = append(arr, arr[i].Left)
+			res = append(res, arr[i].Left.Val)
+		} else {
+			res = append(res, nil)
+		}
+		if arr[i].Right != nil {
+			arr = append(arr, arr[i].Right)
+			res = append(res, arr[i].Right.Val)
+		} else {
+			res = append(res, nil)
+		}
+	}
+	i := len(res) - 1
+	for ; i >= 0 && res[i] == nil; i-- {
+	}
+	return res[:i+1]
+}
