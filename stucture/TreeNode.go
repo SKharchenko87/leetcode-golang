@@ -200,7 +200,6 @@ func TreeNodeToSlice(root *TreeNode) []int {
 }
 
 func TreeToSlice(root *TreeNode) []any {
-
 	start := 0
 	arr := []*TreeNode{root}
 
