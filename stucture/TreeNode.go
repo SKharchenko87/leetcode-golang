@@ -3,6 +3,7 @@ package stucture
 import (
 	"fmt"
 	"math"
+	"reflect"
 	"strconv"
 	"strings"
 )
@@ -226,6 +227,59 @@ func TreeToSlice(root *TreeNode) []any {
 	return result[:len(result)-cntLastNull]
 }
 
-func SliceToTree(root *TreeNode) []any {
-	//ToDo
+func SliceToTree[T any](slice []T) *TreeNode {
+	parents := []*TreeNode{}
+	var root *TreeNode
+	if !reflect.DeepEqual(slice[0], nil) {
+		x, _ := anyToInt(slice[0])
+		root = &TreeNode{Val: x}
+	} else {
+		root = nil
+	}
+	parents = append(parents, root)
+	newParents := []*TreeNode{}
+	for i := 1; i < len(slice); {
+		for j := 0; j < len(parents); j++ {
+			if i < len(slice) {
+				if !reflect.DeepEqual(slice[i], nil) {
+					x, _ := anyToInt(slice[i])
+					node := &TreeNode{Val: x}
+					parents[j].Left = node
+					newParents = append(newParents, node)
+				} else {
+					parents[j].Left = nil
+				}
+			}
+			i++
+			if i < len(slice) {
+				if !reflect.DeepEqual(slice[i], nil) {
+					x, _ := anyToInt(slice[i])
+					node := &TreeNode{Val: x}
+					parents[j].Right = node
+					newParents = append(newParents, node)
+				} else {
+					parents[j].Right = nil
+				}
+			}
+			i++
+		}
+		parents = newParents
+		newParents = []*TreeNode{}
+	}
+	return root
+}
+
+func anyToInt(value interface{}) (int, error) {
+	switch v := value.(type) {
+	case int:
+		return v, nil
+	case int64:
+		return int(v), nil
+	case float64:
+		return int(v), nil
+	case string:
+		return strconv.Atoi(v)
+	default:
+		return 0, fmt.Errorf("unsupported type: %T", value)
+	}
 }
