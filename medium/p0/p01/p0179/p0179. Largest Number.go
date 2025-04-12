@@ -23,7 +23,7 @@ func largestNumber(nums []int) string {
 	return b.String()
 }
 
-var pow10 = []int{1, 10, 100, 1_000, 10_000, 100_000, 1_000_000, 10_000_000, 100_000_000, 100_000_000, 1_000_000_000, 10_000_000_000}
+var pow10 = []int{1, 10, 100, 1_000, 10_000, 100_000, 1_000_000, 10_000_000, 100_000_000, 1_000_000_000, 10_000_000_000}
 
 func lenNum(num int) int {
 	index, flg := slices.BinarySearch(pow10, num)
