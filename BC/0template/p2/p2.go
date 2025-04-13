@@ -28,3 +28,15 @@ func max[T Numeric](x, y T) T {
 	}
 	return y
 }
+
+func powerWithMOD[T Ints](x, y, mod T) T {
+	var res T = 1
+	for y != 0 {
+		if y%2 == 1 {
+			res = res * x % mod
+		}
+		x = x * x % mod
+		y /= 2
+	}
+	return res
+}
