@@ -5,7 +5,53 @@ import (
 	"strconv"
 )
 
-func lexicalOrder(n int) (res []int) {
+func lexicalOrder(n int) []int {
+	res := make([]int, n)
+	index := 0
+	is := []int{1, 10, 100, 1000, 10000}
+	for i := 1; i < 10 && i <= n; i++ {
+		res[index] = i
+		index++
+		for ; is[1] < (i+1)*10 && is[1] <= n; is[1]++ {
+			res[index] = is[1]
+			index++
+			for ; is[2] < (is[1]+1)*10 && is[2] <= n; is[2]++ {
+				res[index] = is[2]
+				index++
+				for ; is[3] < (is[2]+1)*10 && is[3] <= n; is[3]++ {
+					res[index] = is[3]
+					index++
+					for ; is[4] < (is[3]+1)*10 && is[4] <= n; is[4]++ {
+						res[index] = is[4]
+						index++
+					}
+				}
+			}
+		}
+	}
+	return res
+}
+
+func lexicalOrder4(n int) []int {
+	res := make([]int, 0, n)
+	var dfs func(prefix int)
+	dfs = func(prefix int) {
+		if prefix > n {
+			return
+		}
+		res = append(res, prefix)
+		if prefix*10 <= n {
+			dfs(prefix * 10)
+		}
+		if prefix+1 <= n && (prefix+1)%10 != 0 {
+			dfs(prefix + 1)
+		}
+	}
+	dfs(1)
+	return res
+}
+
+func lexicalOrder3(n int) (res []int) {
 	res = make([]int, n)
 	index := 0
 	pow10 := []int{1, 1, 10, 100, 1000, 10000, 100000}
@@ -48,6 +94,7 @@ func lexicalOrder2(n int) []int {
 	return res
 }
 
+/*Самый быстрый*/
 func lexicalOrder1(n int) []int {
 	res := make([]int, n)
 	index := 0
@@ -55,8 +102,7 @@ func lexicalOrder1(n int) []int {
 	i100 := 100
 	i1000 := 1000
 	i10000 := 10000
-	i100000 := 100000
-	for i := 1; i < 10; i++ {
+	for i := 1; i < 10 && i <= n; i++ {
 		res[index] = i
 		index++
 		for ; i10 < (i+1)*10 && i10 <= n; i10++ {
@@ -71,17 +117,9 @@ func lexicalOrder1(n int) []int {
 					for ; i10000 < (i1000+1)*10 && i10000 <= n; i10000++ {
 						res[index] = i10000
 						index++
-						for ; i100000 < (i10000+1)*10 && i100000 <= n; i100000++ {
-							res[index] = i100000
-							index++
-						}
 					}
 				}
 			}
-		}
-
-		if index == n {
-			return res
 		}
 	}
 	return res

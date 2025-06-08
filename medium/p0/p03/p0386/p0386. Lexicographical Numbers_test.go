@@ -73,3 +73,45 @@ func Test_lexicalOrder0(t *testing.T) {
 		})
 	}
 }
+
+func Benchmark_lexicalOrder(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		lexicalOrder(10000)
+	}
+}
+
+func Benchmark_lexicalOrder0(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		lexicalOrder0(10000)
+	}
+}
+
+func Benchmark_lexicalOrder1(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		lexicalOrder1(10000)
+	}
+}
+
+func Benchmark_lexicalOrder2(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		lexicalOrder2(10000)
+	}
+}
+
+func Benchmark_lexicalOrder3(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		lexicalOrder3(10000)
+	}
+}
+
+func Benchmark_lexicalOrder4(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		lexicalOrder4(10000)
+	}
+}
