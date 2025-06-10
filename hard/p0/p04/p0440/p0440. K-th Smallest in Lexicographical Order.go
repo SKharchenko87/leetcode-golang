@@ -53,3 +53,33 @@ func findKthNumber0(n int, k int) int {
 	dfs(1)
 	return res
 }
+
+// TLE
+func findKthNumber1(n int, k int) int {
+	var res int
+	var dfs func(x int) bool
+	dfs = func(x int) bool {
+		k--
+		if k == 0 {
+			res = x
+			return true
+		}
+		if x*10 <= n {
+			if dfs(x * 10) {
+				return true
+			}
+		}
+		if x%10 == 0 || x/10 == 0 {
+			for i := 1; i <= 9 && i <= n; i++ {
+
+				if x+i <= n && dfs(x+i) {
+					return true
+				}
+			}
+
+		}
+		return false
+	}
+	dfs(1)
+	return res
+}
