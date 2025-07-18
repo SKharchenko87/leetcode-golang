@@ -1,0 +1,50 @@
+package p3443
+
+import "testing"
+
+func Test_maxDistance(t *testing.T) {
+	type args struct {
+		s string
+		k int
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{"Example 1", args{s: "NWSE", k: 1}, 3},
+		{"Example 2", args{s: "NSWWEW", k: 3}, 6},
+		{"TestCase 423", args{s: "EWNSW", k: 2}, 5},
+		{"My 0", args{s: "NSSSWESNNWWSNEWESWNSNWNSWNNWEWWNEEEWWNNWSNSWEWNWSNNNEEWWESNSNNNWWENENWWNSNEWSWSEENWWEWWSEWWNWNWNNWENSEESEWSNSSNWSENENSSWSWSNWWNSWNSNSESNSSEEWNSWNEESENWWEWNWNNEWENWNWSNEENSSWSNESEEEEEEWWSSWWNESNNSNSSWS", k: 15}, 59},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := maxDistance(tt.args.s, tt.args.k); got != tt.want {
+				t.Errorf("maxDistance() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Benchmark_maxDistance(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		maxDistance("NSSSWESNNWWSNEWESWNSNWNSWNNWEWWNEEEWWNNWSNSWEWNWSNNNEEWWESNSNNNWWENENWWNSNEWSWSEENWWEWWSEWWNWNWNNWENSEESEWSNSSNWSENENSSWSWSNWWNSWNSNSESNSSEEWNSWNEESENWWEWNWNNEWENWNWSNEENSSWSNESEEEEEEWWSSWWNESNNSNSSWS", 15)
+	}
+}
+
+func Benchmark_maxDistance0(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		maxDistance0("NSSSWESNNWWSNEWESWNSNWNSWNNWEWWNEEEWWNNWSNSWEWNWSNNNEEWWESNSNNNWWENENWWNSNEWSWSEENWWEWWSEWWNWNWNNWENSEESEWSNSSNWSENENSSWSWSNWWNSWNSNSESNSSEEWNSWNEESENWWEWNWNNEWENWNWSNEENSSWSNESEEEEEEWWSSWWNESNNSNSSWS", 15)
+	}
+
+}
+
+func Benchmark_maxDistance1(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		maxDistance1("NSSSWESNNWWSNEWESWNSNWNSWNNWEWWNEEEWWNNWSNSWEWNWSNNNEEWWESNSNNNWWENENWWNSNEWSWSEENWWEWWSEWWNWNWNNWENSEESEWSNSSNWSENENSSWSWSNWWNSWNSNSESNSSEEWNSWNEESENWWEWNWNNEWENWNWSNEENSSWSNESEEEEEEWWSSWWNESNNSNSSWS", 15)
+	}
+
+}
