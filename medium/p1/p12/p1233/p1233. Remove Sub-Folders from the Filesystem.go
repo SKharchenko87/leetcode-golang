@@ -1,6 +1,8 @@
 package p1233
 
-import "strings"
+import (
+	"strings"
+)
 
 type rootFolder struct {
 	children map[string]*rootFolder
