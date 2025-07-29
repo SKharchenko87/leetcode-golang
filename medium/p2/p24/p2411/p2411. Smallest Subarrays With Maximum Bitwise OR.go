@@ -6,7 +6,25 @@ import (
 )
 
 func smallestSubarrays(nums []int) []int {
-	//ToDo
+	l := len(nums)
+	lastIndex := make([]int, 31)
+	for i := 0; i < 31; i++ {
+		lastIndex[i] = l
+	}
+	result := make([]int, l)
+	for i := l - 1; i >= 0; i-- {
+		index := i
+		for j := 0; j < 31; j++ {
+			if (nums[i]>>j)&1 == 1 {
+				lastIndex[j] = i
+			} else if lastIndex[j] == l {
+				continue
+			}
+			index = max(lastIndex[j], index)
+		}
+		result[i] = index - i + 1
+	}
+	return result
 }
 
 func smallestSubarrays1(nums []int) []int {
@@ -54,8 +72,8 @@ func checkBit(arr []int, target int) bool {
 
 func smallestSubarrays0(nums []int) []int {
 
-	arrIndexBits := make([][]int, 32)
-	for i := 0; i < 32; i++ {
+	arrIndexBits := make([][]int, 31)
+	for i := 0; i < 31; i++ {
 		arrIndexBits[i] = make([]int, 0)
 	}
 
