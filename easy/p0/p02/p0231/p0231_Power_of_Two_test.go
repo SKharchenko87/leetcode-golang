@@ -23,3 +23,53 @@ func Test_isPowerOfTwo(t *testing.T) {
 		})
 	}
 }
+
+func Benchmark_isPowerOfTwo(b *testing.B) {
+	b.ReportAllocs()
+	f := isPowerOfTwo
+	for i := 0; i < b.N; i++ {
+		f(2345333486)
+		f(1024)
+	}
+}
+
+func Benchmark_isPowerOfTwo5(b *testing.B) {
+	b.ReportAllocs()
+	f := isPowerOfTwo5
+	for i := 0; i < b.N; i++ {
+		f(2345333486)
+		f(1024)
+	}
+}
+func Benchmark_isPowerOfTwo4(b *testing.B) {
+	b.ReportAllocs()
+	f := isPowerOfTwo4
+	for i := 0; i < b.N; i++ {
+		f(2345333486)
+		f(1024)
+	}
+}
+func Benchmark_isPowerOfTwo3(b *testing.B) {
+	b.ReportAllocs()
+	f := isPowerOfTwo3
+	for i := 0; i < b.N; i++ {
+		f(2345333486)
+		f(1024)
+	}
+}
+func Benchmark_isPowerOfTwo2(b *testing.B) {
+	b.ReportAllocs()
+	f := isPowerOfTwo2
+	for i := 0; i < b.N; i++ {
+		f(2345333486)
+		f(1024)
+	}
+}
+func Benchmark_isPowerOfTwo1(b *testing.B) {
+	b.ReportAllocs()
+	f := isPowerOfTwo1
+	for i := 0; i < b.N; i++ {
+		f(2345333486)
+		f(1024)
+	}
+}
