@@ -1,5 +1,7 @@
 package main
 
+import . "leetcode/stucture"
+
 func mergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
 	var newListNode, prev, res *ListNode
 	var p1, p2 *ListNode

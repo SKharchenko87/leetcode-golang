@@ -1,6 +1,4 @@
-package main
-
-import "fmt"
+package p0238
 
 func productExceptSelf(nums []int) []int {
 	l := len(nums)
@@ -12,15 +10,8 @@ func productExceptSelf(nums []int) []int {
 	}
 	for i := 0; i < l; i++ {
 		res[i], left = res[i]*left, left*nums[i]
-
 		j := l - 1 - i
 		res[j], right = res[j]*right, right*nums[j]
 	}
 	return res
-}
-
-func main() {
-	//nums := []int{1, 2, 3, 4}
-	nums := []int{-1, 1, 0, -3, 3}
-	fmt.Println(productExceptSelf(nums))
 }
