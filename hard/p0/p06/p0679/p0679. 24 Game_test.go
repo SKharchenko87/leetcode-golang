@@ -24,3 +24,24 @@ func Test_judgePoint24(t *testing.T) {
 		})
 	}
 }
+
+func Benchmark_judgePoint24(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		judgePoint24([]int{4, 1, 8, 7})
+	}
+}
+
+func Benchmark_judgePoint241(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		judgePoint241([]int{4, 1, 8, 7})
+	}
+}
+
+func Benchmark_judgePoint240(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		judgePoint240([]int{4, 1, 8, 7})
+	}
+}
