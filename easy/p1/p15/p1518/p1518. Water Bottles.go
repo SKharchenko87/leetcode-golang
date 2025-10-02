@@ -12,3 +12,13 @@ func numWaterBottles0(numBottles int, numExchange int) int {
 	}
 	return res
 }
+
+func numWaterBottles1(numBottles int, numExchange int) int {
+	res := 0
+	for numBottles >= numExchange {
+		res += numBottles / numExchange * numExchange
+		numBottles = numBottles/numExchange + numBottles%numExchange
+	}
+	res += numBottles
+	return res
+}
