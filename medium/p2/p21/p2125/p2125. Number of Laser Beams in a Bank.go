@@ -1,6 +1,23 @@
 package p2125
 
 func numberOfBeams(bank []string) int {
+	var prev, cur, res int
+	for _, row := range bank {
+		cur = 0
+		for _, c := range row {
+			if c == '1' {
+				cur++
+			}
+		}
+		if cur > 0 {
+			res += prev * cur
+			prev = cur
+		}
+	}
+	return res
+}
+
+func numberOfBeams0(bank []string) int {
 	levels := len(bank)
 	res := 0
 	prevCount := 0
