@@ -7,6 +7,22 @@ import (
 )
 
 func modifiedList(nums []int, head *ListNode) *ListNode {
+	sort.Ints(nums)
+	for head != nil && search(nums, head.Val) {
+		head = head.Next
+	}
+	cur := head
+	for cur != nil {
+		if cur.Next != nil && search(nums, cur.Next.Val) {
+			cur.Next = cur.Next.Next
+			continue
+		}
+		cur = cur.Next
+	}
+	return head
+}
+
+func modifiedList4(nums []int, head *ListNode) *ListNode {
 	template := make([]bool, 100001)
 	for i := 0; i < len(nums); i++ {
 		template[nums[i]] = true
