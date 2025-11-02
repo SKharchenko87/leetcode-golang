@@ -1,7 +1,5 @@
 package p2257
 
-var directions = [4][2]int{{-1, 0}, {0, 1}, {1, 0}, {0, -1}}
-
 const (
 	UNGUARD                         = 0
 	GUARDED_HORIZONTAL              = 1
@@ -12,6 +10,67 @@ const (
 )
 
 func countUnguarded(m int, n int, guards [][]int, walls [][]int) int {
+	res := m * n
+	tab := make([][]byte, m)
+	for i := range tab {
+		tab[i] = make([]byte, n)
+	}
+	for _, guard := range guards {
+		tab[guard[0]][guard[1]] = GUARD
+		res--
+	}
+	for _, wall := range walls {
+		tab[wall[0]][wall[1]] = WALL
+		res--
+	}
+	var guard bool
+	f := func(i, j int) {
+		switch tab[i][j] {
+		case GUARD:
+			guard = true
+		case WALL:
+			guard = false
+		case UNGUARD:
+			if guard {
+				tab[i][j] = GUARDED_HORIZONTAL_AND_VERTICAL
+				res--
+			}
+		}
+	}
+	for i := 0; i < m; i++ {
+		guard = false
+		for j := 0; j < n; j++ {
+			f(i, j)
+		}
+	}
+
+	for i := 0; i < m; i++ {
+		guard = false
+		for j := n - 1; j >= 0; j-- {
+			f(i, j)
+		}
+	}
+
+	for j := 0; j < n; j++ {
+		guard = false
+		for i := 0; i < m; i++ {
+			f(i, j)
+		}
+	}
+
+	for j := 0; j < n; j++ {
+		guard = false
+		for i := m - 1; i >= 0; i-- {
+			f(i, j)
+		}
+	}
+
+	return res
+}
+
+var directions = [4][2]int{{-1, 0}, {0, 1}, {1, 0}, {0, -1}}
+
+func countUnguarded2(m int, n int, guards [][]int, walls [][]int) int {
 	tab := make([][]byte, m)
 	for i := range tab {
 		tab[i] = make([]byte, n)
