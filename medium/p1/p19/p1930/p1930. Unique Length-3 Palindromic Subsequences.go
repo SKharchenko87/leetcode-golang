@@ -7,6 +7,58 @@ import (
 
 func countPalindromicSubsequence(s string) int {
 	l := len(s)
+	postSum := make([]uint, l+1)
+	for i := l - 1; i > 0; i-- {
+		postSum[i] = postSum[i+1] | (1 << (s[i] - 'a'))
+	}
+	var sum uint = 1 << (s[0] - 'a')
+	alph := [26]uint{}
+	for i := 1; i < l; i++ {
+		alph[s[i]-'a'] |= sum & postSum[i+1]
+		sum |= 1 << (s[i] - 'a')
+	}
+	res := 0
+	for _, a := range alph {
+		res += bits.OnesCount(a)
+	}
+	return res
+}
+
+func countPalindromicSubsequence4(s string) int {
+	alphabet := [26][]int{}
+	for i := 0; i < 26; i++ {
+		alphabet[i] = []int{}
+	}
+	for i, ch := range s {
+		alphabet[ch-'a'] = append(alphabet[ch-'a'], i)
+	}
+	var res, left, right, mid, midIndex int
+	for i0 := 0; i0 < 26; i0++ {
+		if len(alphabet[i0]) == 0 {
+			continue
+		}
+		left = alphabet[i0][0]
+		right = alphabet[i0][len(alphabet[i0])-1]
+		for i1 := 0; i1 < 26; i1++ {
+			if len(alphabet[i1]) == 0 {
+				continue
+			}
+
+			midIndex, _ = slices.BinarySearch(alphabet[i1], left+1)
+			if midIndex < len(alphabet[i1]) {
+				mid = alphabet[i1][midIndex]
+				if left < mid && mid < right {
+					res++
+				}
+			}
+
+		}
+	}
+	return res
+}
+
+func countPalindromicSubsequence3(s string) int {
+	l := len(s)
 	left, right := make([]uint32, l), make([]uint32, l)
 	left[0] = 1 << (s[0] - 'a')
 	for i := 1; i < l; i++ {
