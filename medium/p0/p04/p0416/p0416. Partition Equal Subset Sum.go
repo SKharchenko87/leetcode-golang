@@ -6,6 +6,51 @@ import (
 )
 
 func canPartition(nums []int) bool {
+	sum := 0
+	for _, v := range nums {
+		sum += v
+	}
+	if sum%2 != 0 {
+		return false
+	}
+	sum /= 2
+	dp := make([]bool, sum+1)
+	dp[0] = true
+	for _, num := range nums {
+		if sum-num >= 0 && dp[sum-num] {
+			return true
+		}
+		for i := sum - 1; i >= num; i-- {
+			if dp[i-num] {
+				dp[i] = true
+			}
+		}
+	}
+	return dp[sum]
+}
+
+func canPartition4(nums []int) bool {
+	sum := 0
+	for _, v := range nums {
+		sum += v
+	}
+	if sum%2 != 0 {
+		return false
+	}
+	sum /= 2
+	dp := make([]bool, sum+1)
+	dp[0] = true
+	for _, num := range nums {
+		for i := sum; i >= num; i-- {
+			if dp[i-num] {
+				dp[i] = true
+			}
+		}
+	}
+	return dp[sum]
+}
+
+func canPartition3(nums []int) bool {
 	l := len(nums)
 	sum := 0
 	for _, num := range nums {
