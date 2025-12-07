@@ -1,6 +1,69 @@
 package p1590
 
 func minSubarray(nums []int, p int) int {
+	l := len(nums)
+	sum := 0
+	for i := 0; i < l; i++ {
+		sum = (sum + nums[i]) % p
+	}
+
+	if sum == 0 {
+		return 0
+	}
+	m := make(map[int]int, l)
+	m[0] = -1
+	res := l
+	cur := 0
+	for i := 0; i < l; i++ {
+		if sum-nums[i]%p == 0 {
+			return 1
+		}
+		cur = (cur + nums[i]) % p
+		if val, ok := m[(p+cur-sum)%p]; ok {
+			res = min(res, i-val)
+		}
+		m[cur] = i
+	}
+
+	if res == l {
+		return -1
+	}
+	return res
+
+}
+
+/*TLE*/
+func minSubarray2(nums []int, p int) int {
+	l := len(nums)
+	prefSum := make([]int, l+2)
+	sum := 0
+	for i, cur := range nums {
+		sum = (sum + cur) % p
+		prefSum[i+1] = sum
+	}
+	if sum%p == 0 {
+		return 0
+	}
+	res := l
+	for i := 1; i <= l; i++ {
+		for j := i + 1; j <= l+1; j++ {
+			prev := prefSum[i-1]
+			cur := (p + prefSum[j-1] - prev) % p
+			if (sum-cur+p)%p == 0 {
+				if res > j-i {
+					res = j - i
+				}
+			}
+		}
+	}
+	if res == l {
+		return -1
+	}
+	return res
+
+}
+
+func minSubarray1(nums []int, p int) int {
 	sum := 0
 	mp := map[int]int{}
 	for _, v := range nums {
@@ -35,20 +98,6 @@ func minSubarray(nums []int, p int) int {
 	}
 
 	return minCount
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-
-	return b
-}
-
-func reverse(nums *[]int) {
-	for i, j := 0, len(*nums)-1; i < j; i, j = i+1, j-1 {
-		(*nums)[i], (*nums)[j] = (*nums)[j], (*nums)[i]
-	}
 }
 
 // LTE
