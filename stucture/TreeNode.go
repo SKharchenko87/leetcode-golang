@@ -139,7 +139,7 @@ func SliceToTreeNode(slice []int, full bool, null int) *TreeNode {
 				}
 			}
 		}
-		fmt.Println(fullSlice)
+		//fmt.Println(fullSlice)
 		return addTreeNode(0, &fullSlice, null)
 	}
 }
