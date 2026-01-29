@@ -1,18 +1,65 @@
 package p2976
 
-import (
-	"math"
-	"strings"
-)
+const limit = 1e9 + 1
 
-//'a', 'b', 'c', 'c', 'e', 'd'}, changed: []byte{'b', 'c', 'b', 'e', 'b', 'e'
-// a->b->c->e	0->1->2->4
-// b->c->e 		1->2->4
-// c->e c->b 	2->4 2->1
-// e->b->c		4->1->2
-// d->e			3->4
+var costMatrix = [26][26]int{}
+
+func clearMatrix() {
+	for i := 0; i < 26; i++ {
+		for j := 0; j < 26; j++ {
+			costMatrix[i][j] = limit
+		}
+	}
+	for i := 0; i < 26; i++ {
+		costMatrix[i][i] = 0
+	}
+}
 
 func minimumCost(source string, target string, original []byte, changed []byte, cost []int) int64 {
+	clearMatrix()
+
+	for i := 0; i < len(original); i++ {
+		original[i] -= 'a'
+		changed[i] -= 'a'
+		o, t := original[i], changed[i]
+		costMatrix[o][t] = min(costMatrix[o][t], cost[i])
+	}
+	newOriginal := make([]byte, 0, 26*26)
+	newChanged := make([]byte, 0, 26*26)
+
+	for len(original) > 0 {
+		for i := 0; i < len(original); i++ {
+			o, t := original[i], changed[i]
+			for newT := byte(0); newT < 26; newT++ {
+				candidateCost := costMatrix[o][t] + costMatrix[t][newT]
+				if candidateCost < costMatrix[o][newT] {
+					newOriginal, newChanged = append(newOriginal, o), append(newChanged, newT)
+					costMatrix[o][newT] = candidateCost
+				}
+			}
+		}
+		original, newOriginal = newOriginal, original[:0]
+		changed, newChanged = newChanged, changed[:0]
+	}
+
+	var res, v int64
+	for i := range source {
+		if v = int64(costMatrix[source[i]-'a'][target[i]-'a']); v == limit {
+			return -1
+		}
+		res += v
+	}
+	return res
+}
+
+//'a', 'b', 't', 't', 'e', 'd'}, changed: []byte{'b', 't', 'b', 'e', 'b', 'e'
+// a->b->t->e	0->1->2->4
+// b->t->e 		1->2->4
+// t->e t->b 	2->4 2->1
+// e->b->t		4->1->2
+// d->e			3->4
+
+func minimumCost1(source string, target string, original []byte, changed []byte, cost []int) int64 {
 	var res int64
 	matrix := findMinPath(original, changed, cost)
 	for i := 0; i < len(source); i++ {
@@ -54,75 +101,4 @@ func findMinPath(original []byte, changed []byte, cost []int) (res [26][26]int) 
 		}
 	}
 	return res
-}
-
-type convert struct {
-	from byte
-	to   byte
-}
-
-func minimumCost0(source string, target string, original []byte, changed []byte, cost []int) int64 {
-	m := map[convert]int{}
-	mx := map[byte][]byte{}
-	res := map[string]int{}
-	for i, v := range original {
-		res[string(v)]++
-		if v != changed[i] {
-			c := convert{from: v, to: changed[i]}
-			m[c] = cost[i]
-			if arr, ok := mx[v]; ok {
-				mx[v] = append(arr, changed[i])
-			} else {
-				mx[v] = []byte{changed[i]}
-			}
-
-		}
-	}
-
-	rec(mx, &res, 1)
-
-	for str, _ := range res {
-		if len(str) > 1 {
-			var minCost int
-			if v, ok := m[convert{str[0], str[len(str)-1]}]; ok {
-				minCost = v
-			} else {
-				minCost = math.MaxInt
-			}
-			cost := 0
-			for i := 0; i < len(str)-1; i++ {
-				cost += m[convert{str[i], str[i+1]}]
-			}
-			if cost < minCost {
-				m[convert{str[0], str[len(str)-1]}] = cost
-			}
-		}
-	}
-	var total int64
-	for i, src := range source {
-		if byte(src) != target[i] {
-			if c, ok := m[convert{byte(src), target[i]}]; ok {
-				total += int64(c)
-			} else {
-				return -1
-			}
-		}
-	}
-
-	return total
-}
-
-func rec(mx map[byte][]byte, res *map[string]int, l int) {
-	for v, _ := range *res {
-		if len(v) == l {
-			arrMX := mx[v[len(v)-1]]
-			for i := 0; i < len(arrMX); i++ {
-				_, ok := (*res)[v+string(arrMX[i])]
-				if !strings.Contains(v, string(arrMX[i])) && !ok {
-					(*res)[v+string(arrMX[i])]++
-					rec(mx, res, l+1)
-				}
-			}
-		}
-	}
 }
