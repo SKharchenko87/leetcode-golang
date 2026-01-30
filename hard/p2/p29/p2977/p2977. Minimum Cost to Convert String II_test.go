@@ -1,0 +1,32 @@
+package p2977
+
+import "testing"
+
+func Test_minimumCost(t *testing.T) {
+	type args struct {
+		source   string
+		target   string
+		original []string
+		changed  []string
+		cost     []int
+	}
+	tests := []struct {
+		name string
+		args args
+		want int64
+	}{
+		{"Example 1", args{source: "abcd", target: "acbe", original: []string{"a", "b", "c", "c", "e", "d"}, changed: []string{"b", "c", "b", "e", "b", "e"}, cost: []int{2, 5, 5, 1, 2, 20}}, 28},
+		{"Example 2", args{source: "abcdefgh", target: "acdeeghh", original: []string{"bcd", "fgh", "thh"}, changed: []string{"cde", "thh", "ghh"}, cost: []int{1, 3, 5}}, 9},
+		{"Example 3", args{source: "abcdefgh", target: "addddddd", original: []string{"bcd", "defgh"}, changed: []string{"ddd", "ddddd"}, cost: []int{100, 1578}}, -1},
+		{"TestCase 128", args{source: "asmlmoumomvummakmlbabvmvvavlavtsvbvssuumsllttsusts", target: "asmlmoumomvummakmlbabvmvvaolklllvbsltuomkslvmmusts", original: []string{"vlavtsvbvssuumslltts", "mtmubkasuvumkobbmsmo", "vsbbvauauvuvsauaastl", "uovumoluksslvkvlkmam", "smsvsuubusskmublvvst", "momuatbkubosmmavvssk", "mommltotttbtvlvalsbt", "vbbbuvslutblvvkvtmmo", "boaosasttvtvtabtubab", "mbtkumblvbasoobaauvm", "vbotklaoltambktlulot", "vluamsokkbaalsmmalav", "mttmbuosbmlttabmbabl", "sskvkbmlabaulluomovt", "lstbuomkaoatmavsmvml"}, changed: []string{"mtmubkasuvumkobbmsmo", "vsbbvauauvuvsauaastl", "uovumoluksslvkvlkmam", "smsvsuubusskmublvvst", "momuatbkubosmmavvssk", "mommltotttbtvlvalsbt", "vbbbuvslutblvvkvtmmo", "boaosasttvtvtabtubab", "mbtkumblvbasoobaauvm", "vbotklaoltambktlulot", "vluamsokkbaalsmmalav", "mttmbuosbmlttabmbabl", "sskvkbmlabaulluomovt", "lstbuomkaoatmavsmvml", "olklllvbsltuomkslvmm"}, cost: []int{9758, 7133, 9355, 8885, 6055, 7360, 9168, 9288, 7422, 6995, 8167, 6154, 6939, 6343, 9733}}, 118755},
+		{"TestCase 371", args{source: "efaayeyfaeysyjheheysyjahbssjjssabfsjysafaefhaejajsysheyjeahyfjyfbabbhysyjesajeayabyfhfyeefehbsshhbahbjhaefseaseajbayebesbybefyyhfejsyyhfhhbbyfjyfbjyhehjjhyffhaeaajejbashjjbhsyfsehejhjhyfaefyjjysyhfbhbaybfabshjfsjyfjjyfahsfyseajbbsfshessjbbejbfjfahfyhhfbayjaebhaaffhfyhjhhhjfhfsejjfaybbyhsaeaebahhbheafayhbjhayjseasbaybesfeeeayssefyyhyeajfsbfyjsjseeae", target: "efaayeyfaeysyjheheysyjahbssjjssabfsjysafaefhaejajsysheyjeahyfjyfbabbhysyjesajeayabyfhfyeefehbsshhbahbjhaefseaseajbayebesbybefyyhfejsyyhfhhbbyfjyfbjyhehjjhyffhaeaajejbashjjbhsyfsehejhjhyfaefyjjysyhfbhbaybfayfaaajsjjahbyjayeaehefhaeyhfybajbbejbfjfahfyhhfbayjaebhaaffhfyhjhhhjfhfsejjfaybbyhsaeaebahhbheafayhbjhayjseasbaybesfeeeayssefyyhyeajfsbfyjeajjffj", original: []string{"abshjfsjyfjjyfahsfyseajbbsfshess", "eaeyhfahjbjsayffjfjsfbbhshbjfyse", "bshbaabfajeeashysyaheshhahhbjheh", "bshfjbhsaehbayebbjejsyajyafsheye", "hsebjbjjfjassbhyaeayysebybjjayjh", "ssesfejjhsaaasafshyyyefehffbbfje", "ybfshayjayebebssbbsfbeafbsaehfea", "afsyyfshfheyeahffsshaayfysajyejs", "eyhebfhaefshesbahaeyyaeeajsbsahb", "eashbfyeehbhfyshjjjhyybjyjaaesay", "jhahfbjjbsbjyfbfjffhjfsjjhjjsbej", "sjseeae", "asbyyyf", "jsfehhy", "ejyshsb", "ajbfeyy", "aefybfs", "sjsshhe", "sysbeef", "fehjjhj"}, changed: []string{"eaeyhfahjbjsayffjfjsfbbhshbjfyse", "bshbaabfajeeashysyaheshhahhbjheh", "bshfjbhsaehbayebbjejsyajyafsheye", "hsebjbjjfjassbhyaeayysebybjjayjh", "ssesfejjhsaaasafshyyyefehffbbfje", "ybfshayjayebebssbbsfbeafbsaehfea", "afsyyfshfheyeahffsshaayfysajyejs", "eyhebfhaefshesbahaeyyaeeajsbsahb", "eashbfyeehbhfyshjjjhyybjyjaaesay", "jhahfbjjbsbjyfbfjffhjfsjjhjjsbej", "ayfaaajsjjahbyjayeaehefhaeyhfyba", "asbyyyf", "jsfehhy", "ejyshsb", "ajbfeyy", "aefybfs", "sjsshhe", "sysbeef", "fehjjhj", "eajjffj"}, cost: []int{67, 95, 100, 13, 64, 71, 36, 41, 76, 77, 87, 83, 73, 92, 98, 67, 47, 80, 94, 79}}, 1440},
+		{"TestCase 372", args{source: "efsyafbeyehssbbjfyyysajhejaeesybehesaeaejaseyejeyajassajsfahahajsbaeyjyaefsjybfafsjssjasjybffsjbeebjyyyaajfjbabahbeeffbhhjhbheaayabfssfsejafjbfeyjyyejsaheffbyjjsfyeajsyfyyybhsbesfasehjjaeysyesfyasjybehhysjssajfbhfhasyebfbbehbysyeybjyhaahbeyeeffesaefhayfbbyejfsjyjbfysjhhsybhjfyeyeyfyfbfyaaejfsjeyhfehebfsjyaseyssahyajjajyfebbfbesyffsseabbafajfyyjebhj", target: "efsyafbeyehssbbjfyyysajhejaeesybehesaeaejaseyejeyajassahebjfsjhbehhsfafahejbseahbbahajebabaefbjeasbjeehaajfjbabahbeeffbhhjhbheaayabfssfsejafjbfeyjyyejsaheffbyjjsfyeajsyfyyybhsbesfasehjjaeysyesfyasjybehhysjssajfbhfhasyebfbbehbysyeybjyhaahbeyeeffesaefhayfbbyejfsjyjbfysjhhsybhjfyeyeyfyfbfyaaejfsjeyhfehebfsjyaseyssahyajjajyfebbfbesyffsseabbafajyfjjhbha", original: []string{"ajsfahahajsbaeyjyaefsjybfafsjssjasjybffsjbeebjyyy", "jjybbajbjssbasajhhajabbebjbjyhjyseayjffaysahafsjf", "jhsjhfabjeeshfebhfyjfeeeeajssffessahyyaeebhfyyjse", "eyjssssfbhaaefyafbsybsbjyfyabjjjbaebyfsfyebehshff", "fefjefsbbyfejyhshfbyabebsashyyjfefysayehfhyfejyyh", "bjbjyshyheasejyfsbafhhhyhaefyfjsjfajfhbfhbyfsayya", "beafebfhhsbybeeheesehsbfjhaaeeeebfayffjysjsyefshj", "yfbsbsjjhjbfybffsejjyeebbeyshejyajbyeheeseyhyhehy", "yehbyahjbsbbfsejfyfssbsjfahfhasfeahsfesfyyhhfaaja", "ybfyyfbbyjybhjybefaeffasjbsjfhhbbjjbyyajejhfhjbhy", "ebshfhhabjjyfhshyyffhjjbeajyhebeffsffyjbafbjyjhaa", "fsjshssjsjeefjfeysjffeyehysyybasabhfffeyehshfbhbj", "faefjebefsjjssefaesaeffheefshbfhbbhsfbjbbaeayfafy", "eybeabsffhyeafeshbbhfbehsaeayfajyayfahjsefaaeebhy", "fehejeefysbybeybshhjsaffashffheejehybbjyjsesybhby", "fyyjebhj", "asyybjae", "jjfeabbj", "efhjsbhf", "sehbfjbh"}, changed: []string{"jjybbajbjssbasajhhajabbebjbjyhjyseayjffaysahafsjf", "jhsjhfabjeeshfebhfyjfeeeeajssffessahyyaeebhfyyjse", "eyjssssfbhaaefyafbsybsbjyfyabjjjbaebyfsfyebehshff", "fefjefsbbyfejyhshfbyabebsashyyjfefysayehfhyfejyyh", "bjbjyshyheasejyfsbafhhhyhaefyfjsjfajfhbfhbyfsayya", "beafebfhhsbybeeheesehsbfjhaaeeeebfayffjysjsyefshj", "yfbsbsjjhjbfybffsejjyeebbeyshejyajbyeheeseyhyhehy", "yehbyahjbsbbfsejfyfssbsjfahfhasfeahsfesfyyhhfaaja", "ybfyyfbbyjybhjybefaeffasjbsjfhhbbjjbyyajejhfhjbhy", "ebshfhhabjjyfhshyyffhjjbeajyhebeffsffyjbafbjyjhaa", "fsjshssjsjeefjfeysjffeyehysyybasabhfffeyehshfbhbj", "faefjebefsjjssefaesaeffheefshbfhbbhsfbjbbaeayfafy", "eybeabsffhyeafeshbbhfbehsaeayfajyayfahjsefaaeebhy", "fehejeefysbybeybshhjsaffashffheejehybbjyjsesybhby", "ahebjfsjhbehhsfafahejbseahbbahajebabaefbjeasbjeeh", "asyybjae", "jjfeabbj", "efhjsbhf", "sehbfjbh", "yfjjhbha"}, cost: []int{96, 84, 91, 94, 74, 88, 81, 96, 100, 22, 66, 95, 68, 70, 45, 55, 79, 98, 74, 100}}, 1576},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := minimumCost(tt.args.source, tt.args.target, tt.args.original, tt.args.changed, tt.args.cost); got != tt.want {
+				t.Errorf("minimumCost() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
