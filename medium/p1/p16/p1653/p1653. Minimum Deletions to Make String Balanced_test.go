@@ -26,3 +26,23 @@ func Test_minimumDeletions(t *testing.T) {
 		})
 	}
 }
+
+func bench(f func(string) int, b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		f("bbbbbbbaabbbbbaaabbbabbbbaabbbbbbaabbaaabaabbbaaaabaaababbbabbabbaaaabbbabbbbbaabbababbbaaaaaababaaababaabbabbbaaaabbbbbabbabaaaabbbaba")
+	}
+}
+
+func BenchmarkName(b *testing.B) {
+	bench(minimumDeletions, b)
+}
+func BenchmarkName2(b *testing.B) {
+	bench(minimumDeletions2, b)
+}
+func BenchmarkName1(b *testing.B) {
+	bench(minimumDeletions1, b)
+}
+func BenchmarkName0(b *testing.B) {
+	bench(minimumDeletions0, b)
+}
