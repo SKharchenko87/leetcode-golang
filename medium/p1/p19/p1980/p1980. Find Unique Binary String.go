@@ -1,5 +1,10 @@
 package p1980
 
+import (
+	"fmt"
+	"strconv"
+)
+
 func findDifferentBinaryString(nums []string) string {
 	n := len(nums)
 	res := make([]byte, n)
@@ -14,6 +19,30 @@ func findDifferentBinaryString(nums []string) string {
 		}
 	}
 	return string(res)
+}
+
+func findDifferentBinaryString1(nums []string) string {
+	n := len(nums)
+	numbers := make([]uint, n)
+	for i := 0; i < n; i++ {
+		x, _ := strconv.ParseUint(nums[i], 2, 16)
+		numbers[i] = uint(x)
+	}
+	for i := uint(0); i < 1<<n; i++ {
+		if !check(numbers, i) {
+			return fmt.Sprintf("%016b", i)[16-n:]
+		}
+	}
+	return ""
+}
+
+func check(numbers []uint, x uint) bool {
+	for _, number := range numbers {
+		if x == number {
+			return true
+		}
+	}
+	return false
 }
 
 type Tree struct {
