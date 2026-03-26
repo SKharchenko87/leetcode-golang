@@ -12,13 +12,13 @@ func maxOperations(nums []int) int {
 	}
 	return cnt
 }
-
+`
 func abs(x int) int {
 	if x >= 0 {
 		return x
 	}
 	return -1 * x
-}
+}`
 
 func min(x, y int) int {
 	if x < y {
