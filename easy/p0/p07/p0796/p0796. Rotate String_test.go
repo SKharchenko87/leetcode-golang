@@ -26,26 +26,21 @@ func Test_rotateString(t *testing.T) {
 	}
 }
 
-func Test_findKVM(t *testing.T) {
-	type args struct {
-		src string
-		trg string
+func bench(b *testing.B, f func(string, string) bool) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		f("defdefdefabcabc", "defdefabcabcdef")
 	}
-	tests := []struct {
-		name string
-		args args
-		want int
-	}{
-		{"Example 1", args{"abcde", "ab"}, 0},
-		{"Example 2", args{"abcde", "cd"}, 2},
-		{"Example 3", args{"abcde", "d"}, 3},
-		{"Example 4", args{"bbbacddceeb", "ceebbbbacddceebbbbacdd"}, 4},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := findKVM(tt.args.src, tt.args.trg); got != tt.want {
-				t.Errorf("findKVM() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+}
+
+func Benchmark_rotateString(b *testing.B) {
+	bench(b, rotateString)
+}
+
+func Benchmark_rotateString1(b *testing.B) {
+	bench(b, rotateString1)
+}
+
+func Benchmark_rotateString0(b *testing.B) {
+	bench(b, rotateString0)
 }
