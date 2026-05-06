@@ -7,6 +7,32 @@ const (
 )
 
 func rotateTheBox(box [][]byte) [][]byte {
+	m, n := len(box), len(box[0])
+	ans := make([][]byte, n)
+	for i := 0; i < n; i++ {
+		ans[i] = make([]byte, m)
+	}
+
+	for i := 0; i < m; i++ {
+		prospectStoneIndex := n - 1
+		for j := n - 1; j >= 0; j-- {
+			ans[j][m-i-1] = EMPTY
+			switch box[i][j] {
+			case STONE:
+				//перемещаем камень на prospectStoneIndex и уменьшаем его на 1
+				ans[prospectStoneIndex][m-i-1] = STONE
+				prospectStoneIndex--
+			case OBSTACLE:
+				//prospectStoneIndex устанавлием выше текущей позиции
+				prospectStoneIndex = j - 1
+				ans[j][m-i-1] = OBSTACLE
+			}
+		}
+	}
+	return ans
+}
+
+func rotateTheBox3(box [][]byte) [][]byte {
 	m := len(box)
 	n := len(box[0])
 	result := make([][]byte, n)
