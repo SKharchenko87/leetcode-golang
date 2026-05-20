@@ -1,6 +1,20 @@
 package p2657
 
+import "math/bits"
+
 func findThePrefixCommonArray(A []int, B []int) []int {
+	xa, xb := uint64(0), uint64(0)
+	n := len(A)
+	res := make([]int, n)
+	for i := 0; i < n; i++ {
+		xa |= 1 << A[i]
+		xb |= 1 << B[i]
+		res[i] = bits.OnesCount64(xa & xb)
+	}
+	return res
+}
+
+func findThePrefixCommonArray2(A []int, B []int) []int {
 	n := len(A)
 	freq, res := make([]int, n), make([]int, n)
 	cnt := 0
