@@ -1,4 +1,4 @@
-package main
+package p0033
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ func abs(x int) int {
 	return x
 }
 
-`func search(nums []int, target int) int {
+func search(nums []int, target int) int {
 	leftId := 0
 	rightId := len(nums) - 1
 	if target == nums[rightId] {
@@ -59,7 +59,7 @@ func abs(x int) int {
 		mid = leftId + (rightId-leftId)/2
 	}
 	return -1
-}`
+}
 
 func main() {
 	//nums := []int{1, 3}
