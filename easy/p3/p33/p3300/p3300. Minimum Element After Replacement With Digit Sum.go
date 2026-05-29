@@ -5,6 +5,23 @@ import "math"
 func minElement(nums []int) int {
 	res := math.MaxInt
 	for i := 0; i < len(nums); i++ {
+		sum := digitSum(nums[i])
+		res = min(res, sum)
+	}
+	return res
+}
+
+func digitSum(n int) (res int) {
+	for n > 0 {
+		res += n % 10
+		n /= 10
+	}
+	return
+}
+
+func minElement0(nums []int) int {
+	res := math.MaxInt
+	for i := 0; i < len(nums); i++ {
 		n := nums[i]
 		sum := 0
 		for n > 0 {
