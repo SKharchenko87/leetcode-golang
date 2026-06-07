@@ -3,6 +3,40 @@ package p2196
 import . "leetcode/stucture"
 
 func createBinaryTree(descriptions [][]int) *TreeNode {
+	descriptionsLength := len(descriptions)
+	tree := make(map[int]*TreeNode, descriptionsLength)
+	notRoot := make(map[int]bool, descriptionsLength)
+	for i := 0; i < descriptionsLength; i++ {
+		valParent := descriptions[i][0]
+		if _, ok := tree[valParent]; !ok {
+			tree[valParent] = &TreeNode{Val: valParent}
+		}
+		parent := tree[valParent]
+
+		valChild := descriptions[i][1]
+		if _, ok := tree[valChild]; !ok {
+			tree[valChild] = &TreeNode{Val: valChild}
+		}
+		child := tree[valChild]
+		notRoot[valChild] = true
+
+		isLeft := descriptions[i][2]
+		if isLeft == 0 {
+			parent.Right = child
+		} else {
+			parent.Left = child
+		}
+	}
+
+	for i, node := range tree {
+		if _, ok := notRoot[i]; !ok {
+			return node
+		}
+	}
+	return nil
+}
+
+func createBinaryTree2(descriptions [][]int) *TreeNode {
 	countNodes := len(descriptions)
 	mapNodeValToCursorNode := make(map[int]*TreeNode, countNodes)
 	children := make(map[int]struct{}, countNodes)
