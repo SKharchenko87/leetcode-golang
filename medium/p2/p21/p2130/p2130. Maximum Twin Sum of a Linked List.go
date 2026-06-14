@@ -1,32 +1,33 @@
-package main
+package p2130
 
-import "fmt"
-
-func main() {
-	headArr := []int{4, 2, 2, 3}
-	//headArr := []int{1, 100000}
-	head := new(ListNode)
-	save := head
-	for i, v := range headArr {
-		head.Val = v
-		fmt.Printf("v: %p %v\n", &head, head)
-		if i != len(headArr)-1 {
-			next := new(ListNode)
-			head.Next = next
-			head = next
-		}
-	}
-	var x *ListNode
-	x = save
-	print(pairSum(x))
-}
-
-type ListNode struct {
-	Val  int
-	Next *ListNode
-}
+import . "leetcode/stucture"
 
 func pairSum(head *ListNode) int {
+	var n int
+	cur := head
+	for cur != nil {
+		cur = cur.Next
+		n++
+	}
+	cur = head
+	for i := 0; i < n/2; i++ {
+		cur = cur.Next
+	}
+	var prev, next *ListNode
+	for i := 0; i < n/2; i++ {
+		next = cur.Next
+		cur.Next, cur, prev = prev, next, cur
+	}
+	var ans int
+	for i := 0; i < n/2; i++ {
+		ans = max(ans, head.Val+prev.Val)
+		head = head.Next
+		prev = prev.Next
+	}
+	return ans
+}
+
+func pairSum0(head *ListNode) int {
 	index := 0
 	arr := make([]int, 100000)
 	for head != nil {
