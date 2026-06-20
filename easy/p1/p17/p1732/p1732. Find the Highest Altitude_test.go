@@ -11,7 +11,8 @@ func Test_largestAltitude(t *testing.T) {
 		args args
 		want int
 	}{
-		// TODO: Add test cases.
+		{"Example 1", args{gain: []int{-5, 1, 5, 0, -7}}, 1},
+		{"Example 2", args{gain: []int{-4, -3, -2, -1, 4, 3, 2}}, 0},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
