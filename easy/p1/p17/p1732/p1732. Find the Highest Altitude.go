@@ -1,20 +1,21 @@
-package main
-
-import "fmt"
+package p1732
 
 func largestAltitude(gain []int) int {
-	maxAltitude, curltitude := 0, 0
+	res, cur := 0, 0
+	for i := 0; i < len(gain); i++ {
+		cur += gain[i]
+		res = max(res, cur)
+	}
+	return res
+}
+
+func largestAltitude0(gain []int) int {
+	maxAltitude, certitude := 0, 0
 	for _, v := range gain {
-		curltitude += v
-		if curltitude > maxAltitude {
-			maxAltitude = curltitude
+		certitude += v
+		if certitude > maxAltitude {
+			maxAltitude = certitude
 		}
 	}
 	return maxAltitude
-}
-
-func main() {
-	//gain := []int{-5, 1, 5, 0, -7}
-	gain := []int{-4, -3, -2, -1, 4, 3, 2}
-	fmt.Println(largestAltitude(gain))
 }
