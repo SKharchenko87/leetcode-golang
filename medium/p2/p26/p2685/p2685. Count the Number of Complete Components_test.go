@@ -14,6 +14,7 @@ func Test_countCompleteComponents(t *testing.T) {
 	}{
 		{"Example 1", args{n: 6, edges: [][]int{{0, 1}, {0, 2}, {1, 2}, {3, 4}}}, 3},
 		{"Example 2", args{n: 6, edges: [][]int{{0, 1}, {0, 2}, {1, 2}, {3, 4}, {3, 5}}}, 1},
+		{"TestCase 2820", args{n: 4, edges: [][]int{{1, 0}, {2, 1}, {3, 2}}}, 0},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
