@@ -27,3 +27,18 @@ func Test_sequentialDigits(t *testing.T) {
 		})
 	}
 }
+
+func bench(b *testing.B, f func(low, high int) []int) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		sequentialDigits(10, 1234567890)
+	}
+}
+
+func Benchmark_sequentialDigits(b *testing.B) {
+	bench(b, sequentialDigits)
+}
+
+func Benchmark_sequentialDigits0(b *testing.B) {
+	bench(b, sequentialDigits0)
+}

@@ -1,6 +1,35 @@
 package p1291
 
+import "slices"
+
+var all []int
+
+func init() {
+	all = make([]int, 0, 36)
+	start := 12
+	all = append(all, start)
+	p := 10
+	for start < 123456789 {
+		n := start
+		o := 0
+		for o < 9 {
+			o = n%10 + 1
+			n = n%p*10 + o
+			all = append(all, n)
+		}
+		p *= 10
+		start = start*10 + start%10 + 1
+		all = append(all, start)
+	}
+}
+
 func sequentialDigits(low int, high int) []int {
+	l, _ := slices.BinarySearch(all, low)
+	r, _ := slices.BinarySearch(all, high+1)
+	return all[l:r]
+}
+
+func sequentialDigits0(low int, high int) []int {
 	m := [9][3]int{
 		[3]int{1, 1, 9},
 		[3]int{12, 11, 89},
