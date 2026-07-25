@@ -5,7 +5,81 @@ import (
 	"sort"
 )
 
+type forSort struct {
+	n1 []int
+	n2 []int
+}
+
+func (fs *forSort) Len() int {
+	return len(fs.n1)
+}
+func (fs *forSort) Swap(i, j int) {
+	fs.n1[i], fs.n1[j] = fs.n1[j], fs.n1[i]
+	fs.n2[i], fs.n2[j] = fs.n2[j], fs.n2[i]
+}
+func (fs *forSort) Less(i, j int) bool {
+	return fs.n1[i] <= fs.n1[j]
+}
+
 func arrayRankTransform(arr []int) []int {
+	l := len(arr)
+
+	if l == 0 {
+		return []int{}
+	}
+	indexes := make([]int, l)
+	for i := 0; i < l; i++ {
+		indexes[i] = i
+	}
+
+	fs := forSort{arr, indexes}
+	sort.Sort(&fs)
+	res := make([]int, l)
+	rank := 1
+	prevNum := arr[0]
+	res[indexes[0]] = rank
+	for i := 1; i < l; i++ {
+		if prevNum != arr[i] {
+			rank++
+		}
+		res[indexes[i]] = rank
+		prevNum = arr[i]
+	}
+
+	return res
+}
+
+func arrayRankTransform3(arr []int) []int {
+	l := len(arr)
+	if l == 0 {
+		return []int{}
+	}
+	indexes := make([]int, l)
+	for i := 0; i < l; i++ {
+		indexes[i] = i
+	}
+
+	fs := forSort{arr, indexes}
+	sort.Sort(&fs)
+
+	prev := arr[0]
+	arr[0] = 1
+	for i := 1; i < l; i++ {
+		if prev == arr[i] {
+			arr[i] = arr[i-1]
+		} else {
+			prev = arr[i]
+			arr[i] = arr[i-1] + 1
+		}
+	}
+
+	fs = forSort{indexes, arr}
+	sort.Sort(&fs)
+
+	return arr
+}
+
+func arrayRankTransform2(arr []int) []int {
 	l := len(arr)
 	if l == 0 {
 		return []int{}
@@ -49,50 +123,4 @@ func arrayRankTransform1(arr []int) []int {
 		rank[i] = rankMap[arr[i]]
 	}
 	return rank
-}
-
-type forSort struct {
-	n1 []int
-	n2 []int
-}
-
-func (fs *forSort) Len() int {
-	return len(fs.n1)
-}
-func (fs *forSort) Swap(i, j int) {
-	fs.n1[i], fs.n1[j] = fs.n1[j], fs.n1[i]
-	fs.n2[i], fs.n2[j] = fs.n2[j], fs.n2[i]
-}
-func (fs *forSort) Less(i, j int) bool {
-	return fs.n1[i] <= fs.n1[j]
-}
-
-func arrayRankTransform0(arr []int) []int {
-	l := len(arr)
-	if l == 0 {
-		return []int{}
-	}
-	indexes := make([]int, l)
-	for i := 0; i < l; i++ {
-		indexes[i] = i
-	}
-
-	fs := forSort{arr, indexes}
-	sort.Sort(&fs)
-
-	prev := arr[0]
-	arr[0] = 1
-	for i := 1; i < l; i++ {
-		if prev == arr[i] {
-			arr[i] = arr[i-1]
-		} else {
-			prev = arr[i]
-			arr[i] = arr[i-1] + 1
-		}
-	}
-
-	fs = forSort{indexes, arr}
-	sort.Sort(&fs)
-
-	return arr
 }
