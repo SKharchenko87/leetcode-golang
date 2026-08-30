@@ -5,7 +5,50 @@ import (
 	"sort"
 )
 
+type MultiSortSlices struct {
+	indexes []int
+	values  []int
+}
+
+func (m *MultiSortSlices) Len() int {
+	return len(m.values)
+}
+
+func (m *MultiSortSlices) Less(i, j int) bool {
+	return m.values[i] < m.values[j]
+}
+
+func (m *MultiSortSlices) Swap(i, j int) {
+	m.values[i], m.values[j] = m.values[j], m.values[i]
+	m.indexes[i], m.indexes[j] = m.indexes[j], m.indexes[i]
+}
+
 func lexicographicallySmallestArray(nums []int, limit int) []int {
+	n := len(nums)
+
+	indexes := make([]int, n)
+	for i := 0; i < n; i++ {
+		indexes[i] = i
+	}
+	sort.Sort(&MultiSortSlices{indexes: indexes, values: nums})
+	prevIndex := 0
+	for i := 1; i < n; i++ {
+		if nums[i]-nums[i-1] > limit {
+			slices.Sort(indexes[prevIndex:i])
+			prevIndex = i
+		}
+	}
+	slices.Sort(indexes[prevIndex:n])
+
+	res := make([]int, n)
+	for i := 0; i < n; i++ {
+		res[indexes[i]] = nums[i]
+	}
+
+	return res
+}
+
+func lexicographicallySmallestArray0(nums []int, limit int) []int {
 
 	l := len(nums)
 	clone := slices.Clone(nums)
