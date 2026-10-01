@@ -1,6 +1,22 @@
-package main
+package p0020
 
-import "fmt"
+var m = map[rune]rune{'(': ')', '{': '}', '[': ']'}
+
+func isValid(s string) bool {
+	stack := make([]rune, 0, len(s)/2)
+	for _, ch := range s {
+		switch ch {
+		case ')', '}', ']':
+			if len(stack) == 0 || stack[len(stack)-1] != ch {
+				return false
+			}
+			stack = stack[:len(stack)-1]
+		default:
+			stack = append(stack, m[ch])
+		}
+	}
+	return len(stack) == 0
+}
 
 func check(ss *string, c string) (res bool) {
 	l := len(*ss)
@@ -11,7 +27,7 @@ func check(ss *string, c string) (res bool) {
 	return true
 }
 
-func isValid(s string) bool {
+func isValid0(s string) bool {
 	ss := ""
 	for i := 0; i < len(s); i++ {
 		v := string(s[i])
@@ -34,8 +50,4 @@ func isValid(s string) bool {
 
 	}
 	return ss == ""
-}
-
-func main() {
-	fmt.Println(isValid("(){}{}"))
 }
