@@ -13,6 +13,7 @@ func Test_minAddToMakeValid(t *testing.T) {
 	}{
 		{"Example 1", args{s: "())"}, 1},
 		{"Example 2", args{s: "((("}, 3},
+		{"My 1", args{s: ")))((("}, 6},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

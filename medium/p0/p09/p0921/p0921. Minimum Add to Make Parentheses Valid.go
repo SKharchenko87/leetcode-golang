@@ -1,6 +1,23 @@
 package p0921
 
 func minAddToMakeValid(s string) int {
+	o := 0
+	res := 0
+	for _, v := range s {
+		if v == '(' {
+			o++
+		} else {
+			if o == 0 {
+				res++
+			} else {
+				o--
+			}
+		}
+	}
+	return res + o
+}
+
+func minAddToMakeValid1(s string) int {
 	o, c := 0, 0
 
 	for i := 0; i < len(s); i++ {
