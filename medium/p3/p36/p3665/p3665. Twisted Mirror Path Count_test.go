@@ -11,7 +11,9 @@ func Test_uniquePaths(t *testing.T) {
 		args args
 		want int
 	}{
-		// TODO: Add test cases.
+		{"Example 1", args{grid: [][]int{{0, 1, 0}, {0, 0, 1}, {1, 0, 0}}}, 5},
+		{"Example 2", args{grid: [][]int{{0, 0}, {0, 0}}}, 2},
+		{"Example 3", args{grid: [][]int{{0, 1, 1}, {1, 1, 0}}}, 1},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
