@@ -43,16 +43,16 @@ func isPowerOfTwo2(n int) bool {
 	return false
 }
 
-func isPowerOfTwo2(n int) bool {
-	if n <= 0 {
-		return false
-	}
-	x := 1
-	for n > x {
-		x = x << 1
-	}
-	return n == x
-}
+// func isPowerOfTwo2(n int) bool {
+// 	if n <= 0 {
+// 		return false
+// 	}
+// 	x := 1
+// 	for n > x {
+// 		x = x << 1
+// 	}
+// 	return n == x
+// }
 
 func isPowerOfTwo1(n int) bool {
 	s := 0

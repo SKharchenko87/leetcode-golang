@@ -2,6 +2,7 @@ package p0350
 
 import (
 	"reflect"
+	"slices"
 	"testing"
 )
 
@@ -20,7 +21,9 @@ func Test_intersect(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := intersect(tt.args.nums1, tt.args.nums2); !reflect.DeepEqual(got, tt.want) {
+			got := intersect(tt.args.nums1, tt.args.nums2)
+			slices.Sort(got)
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("intersect() = %v, want %v", got, tt.want)
 			}
 		})
