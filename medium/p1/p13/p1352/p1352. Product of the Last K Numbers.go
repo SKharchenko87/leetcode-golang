@@ -1,24 +1,29 @@
 package p1352
 
 type ProductOfNumbers struct {
-	list []int
+	list    []int
+	lastNil int
 }
 
 func Constructor() ProductOfNumbers {
-	return ProductOfNumbers{[]int{}}
+	return ProductOfNumbers{[]int{1}, 0}
 }
 
 func (this *ProductOfNumbers) Add(num int) {
-	this.list = append(this.list, num)
+	if num == 0 {
+		this.lastNil = len(this.list)
+		this.list = append(this.list, 1)
+	} else {
+		this.list = append(this.list, this.list[len(this.list)-1]*num)
+	}
 }
 
 func (this *ProductOfNumbers) GetProduct(k int) int {
-	res := 1
-	l := len(this.list)
-	for i := l - k; i < l; i++ {
-		res *= this.list[i]
+
+	if this.lastNil+k >= len(this.list) {
+		return 0
 	}
-	return res
+	return this.list[len(this.list)-1] / this.list[len(this.list)-k-1]
 }
 
 /**
